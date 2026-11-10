@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerTrack — Job & Internship Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+  <section id="authView" class="auth-shell">
+    <div class="auth-brand"><div class="brand-mark">C</div><span>CareerTrack</span></div>
+    <div class="auth-card">
+      <p class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p><h1 id="authTitle">Welcome back</h1>
+      <p class="muted" id="authSubtitle">Sign in to manage your career journey.</p>
+      <form id="authForm">
+        <div id="nameField" class="field hidden"><label>Full name</label><input id="authName" autocomplete="name" placeholder="Your name"></div>
+        <div class="field"><label>Email address</label><input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field"><label>Password</label><input id="authPassword" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></div>
+        <button class="primary full" id="authSubmit">Sign in</button>
+      </form>
+      <p class="auth-switch"><span id="switchText">New to CareerTrack?</span> <button id="switchAuth" class="link-btn">Create account</button></p>
+    </div>
+    <p class="auth-foot">A clearer path from application to offer.</p>
+  </section>
+
+  <div id="appView" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">C</div><span>CareerTrack</span></div>
+      <p class="nav-label">WORKSPACE</p>
+      <button class="nav-item active" data-section="overview"><span>▦</span> Overview</button>
+      <button class="nav-item" data-section="applications"><span>▤</span> Applications</button>
+      <button class="nav-item" data-section="calendar"><span>◷</span> Interviews & deadlines</button>
+      <div class="sidebar-bottom"><div class="profile"><div class="avatar" id="avatar">U</div><div><strong id="profileName">User</strong><small>Personal workspace</small></div></div><button id="logoutBtn" class="logout">↪ Sign out</button></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">CAREER WORKSPACE</p><h2 id="pageTitle">Overview</h2></div><div class="top-actions"><button id="themeToggle" class="icon-btn" title="Toggle theme">☾</button><button id="addTop" class="primary">＋ Add application</button></div></header>
+      <section id="overviewSection" class="section">
+        <div class="welcome-row"><div><h1>Keep your career moving.</h1><p class="muted">A simple view of every opportunity you're pursuing.</p></div><span class="date-chip" id="todayLabel"></span></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon purple">▤</div><p>Total applications</p><strong id="totalStat">8</strong><small>All tracked opportunities</small></article>
+          <article class="stat-card"><div class="stat-icon blue">◷</div><p>Interviews</p><strong id="interviewStat">0</strong><small>Conversations in progress</small></article>
+          <article class="stat-card"><div class="stat-icon green">✦</div><p>Offers received</p><strong id="offerStat">0</strong><small>Great things are happening</small></article>
+          <article class="stat-card"><div class="stat-icon orange">↗</div><p>Response rate</p><strong id="responseStat">0%</strong><small>Interview, offer or rejection</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel"><div class="panel-head"><div><h3>Application pipeline</h3><p class="muted">Where your applications stand</p></div></div><div class="chart-wrap"><canvas id="statusChart"></canvas><div id="emptyChart" class="empty-chart">Add an application to see your pipeline.</div></div></article>
+          <article class="panel"><div class="panel-head"><div><h3>Coming up</h3><p class="muted">Interviews and deadlines</p></div><button class="text-btn" data-goto="calendar">View all</button></div><div id="upcomingList" class="upcoming-list"><p class="empty-state">Nothing scheduled yet.</p></div></article>
+        </div>
+        <article class="panel recent-panel"><div class="panel-head"><div><h3>Recent applications</h3><p class="muted">Your latest updates</p></div><button class="text-btn" data-goto="applications">See all</button></div><div id="recentList"></div></article>
+      </section>
+      <section id="applicationsSection" class="section hidden">
+        <div class="section-intro"><div><h1>Your opportunities</h1><p class="muted">Keep every role and internship organized in one place.</p></div><button class="primary" id="addMain">＋ Add application</button></div>
+        <div class="filters"><input id="searchInput" placeholder="⌕ Search company, role or location"><select id="statusFilter"><option value="">All statuses</option><option>Saved</option><option>Applied</option><option>Assessment</option><option>Interview</option><option>Offered</option><option>Rejected</option><option>Withdrawn</option></select><select id="typeFilter"><option value="">All types</option><option>Job</option><option>Internship</option></select></div>
+        <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>COMPANY / ROLE</th><th>TYPE</th><th>STATUS</th><th>APPLIED</th><th>LOCATION</th><th>ACTIONS</th></tr></thead><tbody id="applicationRows"></tbody></table></div><div id="emptyApplications" class="empty-state hidden">No applications found. Add your first opportunity.</div></article>
+      </section>
+      <section id="calendarSection" class="section hidden">
+        <div class="section-intro"><div><h1>Interviews & deadlines</h1><p class="muted">Stay ahead of the dates that matter.</p></div></div>
+        <div class="calendar-grid"><article class="panel"><h3>Upcoming interviews</h3><div id="interviewSchedule" class="schedule-list"></div></article><article class="panel"><h3>Application deadlines</h3><div id="deadlineSchedule" class="schedule-list"></div></article></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="applicationDialog" class="modal">
+    <form id="applicationForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">OPPORTUNITY DETAILS</p><h2 id="modalTitle">Add application</h2></div><button type="button" id="closeModal" class="icon-btn">×</button></div>
+      <input type="hidden" id="applicationId">
+      <div class="form-grid">
+        <div class="field"><label>Company *</label><input id="company" required placeholder="e.g. Google"></div>
+        <div class="field"><label>Role / position *</label><input id="role" required placeholder="e.g. Software Engineer Intern"></div>
+        <div class="field"><label>Opportunity type</label><select id="type"><option>Job</option><option>Internship</option></select></div>
+        <div class="field"><label>Status</label><select id="status"><option>Saved</option><option selected>Applied</option><option>Assessment</option><option>Interview</option><option>Offered</option><option>Rejected</option><option>Withdrawn</option></select></div>
+        <div class="field"><label>Location</label><input id="location" placeholder="e.g. Bengaluru / Remote"></div>
+        <div class="field"><label>Work mode</label><select id="workMode"><option>On-site</option><option>Hybrid</option><option>Remote</option></select></div>
+        <div class="field"><label>Salary / stipend</label><input id="salary" placeholder="e.g. ₹25,000/month"></div>
+        <div class="field"><label>Applied date</label><input id="appliedDate" type="date"></div>
+        <div class="field"><label>Application deadline</label><input id="deadline" type="date"></div>
+        <div class="field"><label>Interview date & time</label><input id="interviewDate" type="datetime-local"></div>
+        <div class="field full-field"><label>Job / internship URL</label><input id="jobUrl" type="url" placeholder="https://"></div>
+        <div class="field full-field"><label>Notes</label><textarea id="notes" rows="3" placeholder="Contact person, preparation notes, follow-up details..."></textarea></div>
+      </div>
+      <div class="modal-actions"><button type="button" id="cancelModal" class="secondary">Cancel</button><button type="submit" class="primary" id="saveApplication">Save application</button></div>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body></html>
